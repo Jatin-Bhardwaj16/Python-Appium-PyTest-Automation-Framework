@@ -1,0 +1,19 @@
+# Virtual Environment
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Pytest
+.pytest_cache/
+
+# Temporary files
+rough_drafts/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

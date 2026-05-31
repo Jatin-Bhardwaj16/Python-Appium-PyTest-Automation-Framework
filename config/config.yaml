@@ -1,0 +1,31 @@
+appium:
+  server:
+    host: "127.0.0.1"
+    port: 4723
+
+  capabilities:
+    platformName: "Android"
+    automationName: "UiAutomator2"
+    deviceName: "Pixel 6"
+
+    app: "/Users/new/Documents/New/Appium_Automation_Framework/ApiDemos-debug.apk"
+
+    appPackage: "io.appium.android.apis"
+    appActivity: "io.appium.android.apis.ApiDemos"
+
+    noReset: false
+    fullReset: false
+    autoGrantPermissions: true
+
+    newCommandTimeout: 300
+
+timeouts:
+  implicitWait: 5
+  explicitWait: 10
+
+execution:
+  platform: "android"
+
+reporting:
+  screenshot_on_failure: true
+  screenshot_folder: "Screenshots"
