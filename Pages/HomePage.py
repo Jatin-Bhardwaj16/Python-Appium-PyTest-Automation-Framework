@@ -15,6 +15,103 @@ class HomePage(AndroidBasePage):
         device_info = self.get_device_info()
 
         return device_info
+    
+    def open_notifications_panel(self):
+
+        self.logger.info("Opening notification panel")
+
+        self.open_notifications()
+
+        return self.is_element_visible(HomePageLocators.NOTIFICATIONS_PANEL)
+
+    def open_full_notifications_panel(self):
+
+        self.logger.info("Opening full notification panel")
+
+        self.open_notifications()
+
+        self.sleep(2)
+
+        self.swipe_down()
+
+        self.sleep(2)
+
+        print(self.driver.page_source)
+
+        return self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
+
+    def close_full_notifications_panel(self):
+
+        self.logger.info("Closing full notification panel")
+
+        self.open_notifications()
+
+        self.swipe_down()
+
+        self.swipe_up()
+
+        self.press_back()
+
+        return not self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
+    
+    def get_brightness_value(self):
+
+        self.logger.info("Checking brightness slider presence in notification panel")
+
+        self.open_full_notifications_panel()
+
+        value = self.get_attribute(HomePageLocators.BRIGHTNESS_SEEKBAR,"text")
+
+        self.logger.info(f"Brightness value: {value}")
+    
+        return value 
+    
+    def set_brightness_level(self, percentage):
+
+        percentage = max(0, min(100, percentage))
+
+        print(self.driver.page_source)
+
+        bounds = self.get_element_bounds(HomePageLocators.BRIGHTNESS_SEEKBAR)
+
+        target_x = bounds["x"] + int(
+            bounds["width"] * percentage / 100
+        )
+
+        target_y = bounds["y"] + bounds["height"] // 2
+
+        self.drag_to_coordinates(
+            HomePageLocators.BRIGHTNESS_SEEKBAR,
+            target_x,
+            target_y
+        )
+
+        return True
+
+    def validate_brightness_functionality(self, target_percentage=80):
+
+        self.logger.info("Validating brightness functionality")
+
+        panel_opened = self.open_full_notifications_panel()
+
+        if not panel_opened:
+            self.logger.error("Brightness slider not visible after opening full notification panel")
+
+            return {
+                "panel_opened": False,
+                "brightness_set": False,
+                "panel_closed": False
+            }
+
+        brightness_set = self.set_brightness_level(target_percentage)
+
+        panel_closed = self.close_full_notifications_panel()
+
+        return {
+            "panel_opened": panel_opened,
+            "brightness_set": brightness_set,
+            "panel_closed": panel_closed
+        }
 
     def app_installation_check(self):
 
@@ -164,36 +261,7 @@ class HomePage(AndroidBasePage):
 
 
         return app_state == 1 and is_closed
-
-    def open_notifications_panel(self):
-
-        self.logger.info("Opening notification panel")
-
-        self.open_notifications()
-
-        return self.is_element_visible(HomePageLocators.NOTIFICATIONS_PANEL)
-
-    def open_full_notifications_panel(self):
-
-        self.logger.info("Opening full notification panel")
-
-        self.open_notifications()
-
-        self.swipe_down()
-
-        return self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
-
-    def close_full_notifications_panel(self):
-
-        self.logger.info("Closing full notification panel")
-
-        self.open_notifications()
-
-        self.swipe_down()
-
-        self.swipe_up()
-
-        return not self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
+    
 
 
 

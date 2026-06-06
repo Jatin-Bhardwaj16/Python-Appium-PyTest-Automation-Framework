@@ -13,4 +13,7 @@ class HomePageLocators:
 
     BRIGHTNESS_SLIDER = (AppiumBy.ACCESSIBILITY_ID, "Display brightness")
 
-   
+    BRIGHTNESS_SEEKBAR = (AppiumBy.ID, "com.android.systemui:id/slider")
+
+    # Alternative locator if ID becomes unstable
+    BRIGHTNESS_SEEKBAR_XPATH = (AppiumBy.XPATH, "//android.widget.SeekBar[@resource-id='com.android.systemui:id/slider']")

@@ -21,6 +21,58 @@ def test_device_info_check(driver):
     assert platform_version is not None
     assert device_name is not None
 
+@pytest.mark.notification
+@pytest.mark.open_notifications
+def test_open_notifications_panel(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Opening notifications panel")
+
+    assert home_page.open_notifications_panel()
+
+@pytest.mark.notification
+@pytest.mark.full_notifications_open
+def test_swipe_down_full_notifications_panel(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Verifying full notification panel is displayed")
+
+    assert home_page.open_full_notifications_panel()
+
+@pytest.mark.notification
+@pytest.mark.full_notifications_close
+def test_close_full_notifications_panel(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Closing full notification panel")
+
+    assert home_page.close_full_notifications_panel()
+
+@pytest.mark.notification
+@pytest.mark.brightness_slider_value
+def test_brightness_slider_value(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Checking brightness slider value in notification panel")
+
+    assert home_page.get_brightness_value()
+
+@pytest.mark.notification
+@pytest.mark.brightness_functionality
+def test_brightness_slider_functionality(driver):
+
+    home_page = HomePage(driver)
+
+    result = home_page.validate_brightness_functionality(80)
+
+    assert result["panel_opened"]
+    assert result["brightness_set"]
+    assert result["panel_closed"]
+
 @pytest.mark.device
 @pytest.mark.installation
 def test_app_installation_check(driver):
@@ -157,32 +209,3 @@ def test_terminate_app_and_verify(driver):
 
     assert home_page.terminate_app_and_verify()
 
-@pytest.mark.notification
-@pytest.mark.open_notifications
-def test_open_notifications_panel(driver):
-
-    home_page = HomePage(driver)
-
-    logger.info("Opening notifications panel")
-
-    assert home_page.open_notifications_panel()
-
-@pytest.mark.notification
-@pytest.mark.full_notifications_open
-def test_swipe_down_full_notifications_panel(driver):
-
-    home_page = HomePage(driver)
-
-    logger.info("Verifying full notification panel is displayed")
-
-    assert home_page.open_full_notifications_panel()
-
-@pytest.mark.notification
-@pytest.mark.full_notifications_close
-def test_close_full_notifications_panel(driver):
-
-    home_page = HomePage(driver)
-
-    logger.info("Closing full notification panel")
-
-    assert home_page.close_full_notifications_panel()
