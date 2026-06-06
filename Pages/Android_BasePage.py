@@ -840,3 +840,5 @@ class AndroidBasePage(CoreBasePage):
     def authenticate_with_biometric(self, match=True):
         self.logger.info(f"Simulating biometric auth: {match}")
         self.driver.finger_print(1 if match else 0)
+
+    

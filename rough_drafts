@@ -1,1 +1,14 @@
 appium --allow-insecure="*:adb_shell"
+
+{
+  "platformName": "Android",
+  "appium:automationName": "UiAutomator2",
+  "appium:deviceName": "Pixel 6",
+  "appium:app": "/Users/new/Documents/New/Appium_Automation_Framework/ApiDemos-debug.apk",
+  "appium:appPackage": "io.appium.android.apis",
+  "appium:appActivity": "io.appium.android.apis.ApiDemos",
+  "appium:noReset": false,
+  "appium:fullReset": false,
+  "appium:autoGrantPermissions": true,
+  "appium:newCommandTimeout": 300
+}
