@@ -385,10 +385,7 @@ class AndroidBasePage(CoreBasePage):
 
         element = self.find_present_element(locator)
 
-        actions = ActionBuilder(
-            self.driver,
-            mouse=PointerInput(interaction.POINTER_TOUCH, "touch")
-        )
+        actions = ActionBuilder(self.driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 
         actions.pointer_action.move_to(element)
         actions.pointer_action.pointer_down()

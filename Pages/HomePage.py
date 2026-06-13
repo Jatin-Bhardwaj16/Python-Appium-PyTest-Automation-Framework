@@ -22,7 +22,7 @@ class HomePage(AndroidBasePage):
 
         self.open_notifications()
 
-        return self.is_element_visible(HomePageLocators.NOTIFICATIONS_PANEL)
+        return self.is_element_visible(HomePageLocators.NOTIFICATIONS_PANEL_LOCATOR)
 
     def open_full_notifications_panel(self):
 
@@ -38,7 +38,7 @@ class HomePage(AndroidBasePage):
 
         print(self.driver.page_source)
 
-        return self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
+        return self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER_LOCATOR)
 
     def close_full_notifications_panel(self):
 
@@ -52,7 +52,7 @@ class HomePage(AndroidBasePage):
 
         self.press_back()
 
-        return not self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER)
+        return not self.is_element_visible(HomePageLocators.BRIGHTNESS_SLIDER_LOCATOR)
     
     def get_brightness_value(self):
 
@@ -60,7 +60,7 @@ class HomePage(AndroidBasePage):
 
         self.open_full_notifications_panel()
 
-        value = self.get_attribute(HomePageLocators.BRIGHTNESS_SEEKBAR,"text")
+        value = self.get_attribute(HomePageLocators.BRIGHTNESS_SEEKBAR_LOCATOR,"text")
 
         self.logger.info(f"Brightness value: {value}")
     
@@ -72,7 +72,7 @@ class HomePage(AndroidBasePage):
 
         print(self.driver.page_source)
 
-        bounds = self.get_element_bounds(HomePageLocators.BRIGHTNESS_SEEKBAR)
+        bounds = self.get_element_bounds(HomePageLocators.BRIGHTNESS_SEEKBAR_LOCATOR)
 
         target_x = bounds["x"] + int(
             bounds["width"] * percentage / 100
@@ -81,7 +81,7 @@ class HomePage(AndroidBasePage):
         target_y = bounds["y"] + bounds["height"] // 2
 
         self.drag_to_coordinates(
-            HomePageLocators.BRIGHTNESS_SEEKBAR,
+            HomePageLocators.BRIGHTNESS_SEEKBAR_LOCATOR,
             target_x,
             target_y
         )
@@ -155,66 +155,6 @@ class HomePage(AndroidBasePage):
         )
 
         return package, activity, app_version, app_state
-
-    def is_home_page_displayed(self):
-
-        self.logger.info("Verifying ApiDemos home page")
-
-        return self.is_element_visible(HomePageLocators.HOME_TITLE)
-
-    def get_page_title(self):
-
-        self.logger.info("Getting current page title")
-
-        page_title_visible = self.is_element_visible(HomePageLocators.PAGE_TITLE)
-
-        if page_title_visible:
-            return self.get_text(HomePageLocators.PAGE_TITLE)
-
-        return self.get_text(HomePageLocators.HOME_TITLE)
-
-    def get_all_menu_items(self):
-
-        self.logger.info("Getting all menu items from ApiDemos home screen")
-
-        elements = self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS)
-
-        menu_items = []
-
-        for element in elements:
-            menu_items.append(element.text)
-
-        return menu_items
-
-    def validate_all_menu_items_navigation(self):
-
-        self.logger.info("Validating all menu item navigation")
-
-        menu_names = []
-
-        total_items = len(
-            self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS))
-
-        for index in range(total_items):
-
-            menu_items = self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS)
-
-            current_item = menu_items[index]
-
-            menu_text = current_item.text
-
-            self.logger.info(f"Opening menu: {menu_text}")
-
-            current_item.click()
-
-            # simple validation
-            assert self.driver.current_activity is not None
-
-            menu_names.append(menu_text)
-
-            self.press_back()
-
-        return menu_names
     
     def restart_the_app(self):
 
@@ -261,6 +201,153 @@ class HomePage(AndroidBasePage):
 
 
         return app_state == 1 and is_closed
+
+    def is_home_page_displayed(self):
+
+        self.logger.info("Verifying ApiDemos home page")
+
+        return self.is_element_visible(HomePageLocators.HOME_TITLE_LOCATOR)
+
+    def get_page_title(self):
+
+        self.logger.info("Getting current page title")
+
+        page_title_visible = self.is_element_visible(HomePageLocators.PAGE_TITLE_LOCATOR)
+
+        if page_title_visible:
+            return self.get_text(HomePageLocators.PAGE_TITLE_LOCATOR)
+
+        return self.get_text(HomePageLocators.HOME_TITLE_LOCATOR)
+
+    def get_all_menu_items(self):
+
+        self.logger.info("Getting all menu items from ApiDemos home screen")
+
+        elements = self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS_LOCATOR)
+
+        menu_items = []
+
+        for element in elements:
+            menu_items.append(element.text)
+
+        return menu_items
+
+    def validate_all_menu_items_navigation(self):
+
+        self.logger.info("Validating all menu item navigation")
+
+        menu_names = []
+
+        total_items = len(
+            self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS_LOCATOR))
+
+        for index in range(total_items):
+
+            menu_items = self.find_visible_elements(HomePageLocators.ALL_MENU_ITEMS_LOCATOR)
+
+            current_item = menu_items[index]
+
+            menu_text = current_item.text
+
+            self.logger.info(f"Opening menu: {menu_text}")
+
+            assert current_item.get_attribute("clickable") == "true"
+
+            current_item.click()
+
+            # simple validation
+            assert self.driver.current_activity is not None
+
+            menu_names.append(menu_text)
+
+            self.press_back()
+
+        return menu_names
+    
+    def navigate_to_preference(self):
+
+        self.click(HomePageLocators.PREFERENCE_LOCATOR)
+        self.click(HomePageLocators.PREFERENCE_DEPENDENCIES_LOCATOR)
+        self.click(HomePageLocators.PREFERENCE_WIFI_CHECKBOX_LOCATOR)
+        self.click(HomePageLocators.PREFERENCE_WIFI_SETTINGS_LOCATOR)
+
+        self.clear_and_enter_text(HomePageLocators.PREFERENCE_WIFI_EDIT_LOCATOR, "TestWifi")
+
+        wifi_name = self.get_text(HomePageLocators.PREFERENCE_WIFI_EDIT_LOCATOR)
+
+        self.click(HomePageLocators.PREFERENCE_OK_BUTTON_LOCATOR)
+
+        return wifi_name
+    
+    def navigate_to_expandable_lists(self):
+
+        self.click(HomePageLocators.VIEWS_LOCATOR)
+        self.click(HomePageLocators.EXPANDABLE_LISTS_LOCATOR)
+        self.click(HomePageLocators.CUSTOM_ADAPTER_LOCATOR)
+
+        self.click(HomePageLocators.PEOPLE_NAMES_LOCATOR)
+
+        self.long_press(HomePageLocators.ARNOLD_NAME_LOCATOR)
+
+        is_sample_menu_visible = self.is_element_visible(HomePageLocators.SAMPLE_MENU_LOCATOR)
+        
+        if is_sample_menu_visible:
+            self.logger.info("Sample menu is visible after long press on Arnold, clicking on Sample action")
+
+            self.click(HomePageLocators.SAMPLE_ACTION_LOCATOR)
+
+            return True
+
+        else:
+            self.logger.warning("Sample menu is NOT visible after long press on Arnold")
+
+            return False
+        
+    def navigate_to_date_widgets(self):
+
+        self.click(HomePageLocators.VIEWS_LOCATOR)
+        self.click(HomePageLocators.DATE_WIDGETS_LOCATOR)
+        self.click(HomePageLocators.INLINE_LOCATOR)
+
+        screen_size = self.driver.get_window_size()
+
+        center_y = int(screen_size["height"] * 0.37)
+        start_x = int(screen_size["width"] * 0.31)
+        end_x = int(screen_size["width"] * 0.69)
+
+        self.swipe_by_coordinates(
+            start_x,
+            center_y,
+            end_x,
+            center_y
+        )
+
+        return True
+    
+    def navigate_to_drag_and_drop(self):
+
+        self.click(HomePageLocators.VIEWS_LOCATOR)
+        self.click(HomePageLocators.DRAG_AND_DROP_LOCATOR)
+
+        self.drag_and_drop(HomePageLocators.DRAG_DOT_1_LOCATOR, HomePageLocators.DRAG_DOT_2_LOCATOR)
+
+        result_text = self.get_text(HomePageLocators.DRAG_RESULT_TEXT_LOCATOR)
+
+        self.logger.info(f"Drag and drop result text: {result_text}")
+
+        return result_text
+
+
+
+        
+
+        
+
+
+
+    
+    
+
     
 
 
