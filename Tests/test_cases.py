@@ -128,6 +128,42 @@ def test_get_package_activity_version_state(driver):
     assert app_state is not None
 
 
+# App Lifecycle Tests
+@pytest.mark.regression
+@pytest.mark.restart
+def test_restart_app(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Restarting the app")
+
+    assert home_page.restart_the_app()
+
+
+@pytest.mark.regression
+@pytest.mark.background
+def test_background_app_for_seconds(driver):
+
+    home_page = HomePage(driver)
+
+    seconds = 5
+
+    logger.info(f"Backgrounding the app for {seconds} seconds")
+
+    assert home_page.background_app_for_seconds(seconds)
+
+
+@pytest.mark.regression
+@pytest.mark.lifecycle
+def test_terminate_app_and_verify(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info(f"Terminating the app and verifying it's closed")
+
+    assert home_page.terminate_app_and_verify()
+    
+
 @pytest.mark.sanity
 @pytest.mark.title
 def test_get_page_title(driver):
@@ -174,38 +210,63 @@ def test_validate_all_menu_items_navigation(driver):
     assert len(menu_names) > 0
 
 
-# App Lifecycle Tests
-@pytest.mark.regression
-@pytest.mark.restart
-def test_restart_app(driver):
+@pytest.mark.preference
+@pytest.mark.preference_dependencies
+def test_navigate_to_preference(driver):
 
     home_page = HomePage(driver)
 
-    logger.info("Restarting the app")
+    logger.info("Navigating to Preference Dependencies and setting WiFi name")
 
-    assert home_page.restart_the_app()
+    wifi_name = home_page.navigate_to_preference()
 
+    assert wifi_name == "TestWifi"
 
-@pytest.mark.regression
-@pytest.mark.background
-def test_background_app_for_seconds(driver):
-
-    home_page = HomePage(driver)
-
-    seconds = 5
-
-    logger.info(f"Backgrounding the app for {seconds} seconds")
-
-    assert home_page.background_app_for_seconds(seconds)
-
-
-@pytest.mark.regression
-@pytest.mark.lifecycle
-def test_terminate_app_and_verify(driver):
+@pytest.mark.views
+@pytest.mark.expandable_lists
+def test_long_press_arnold_and_select_sample_action(driver):
 
     home_page = HomePage(driver)
 
-    logger.info(f"Terminating the app and verifying it's closed")
+    logger.info("Navigating to Expandable Lists")
 
-    assert home_page.terminate_app_and_verify()
+    result = home_page.navigate_to_expandable_lists()
+
+    assert result is True, \
+        "Sample menu was not displayed after long pressing Arnold"
+    
+@pytest.mark.views
+@pytest.mark.date_widgets
+def test_drag_clock_from_9_to_15(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info(
+        "Verifying user can drag clock hand from 9 to 15 in Date Widgets Inline view"
+    )
+
+    logger.info("Navigating to Date Widgets")
+
+    result = home_page.navigate_to_date_widgets()
+
+    assert result is True, \
+        "Failed to drag clock hand from 9 to 15"
+    
+@pytest.mark.views
+@pytest.mark.drag_and_drop
+def test_drag_and_drop(driver):
+
+    home_page = HomePage(driver)
+
+    logger.info("Verifying user can perform drag and drop action")
+
+    logger.info("Navigating to Drag and Drop view")
+
+    result = home_page.navigate_to_drag_and_drop()
+
+    assert result == "Dropped!", \
+        f"Unexpected drag and drop result text: {result}"
+    
+
+
 
